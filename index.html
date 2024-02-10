@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA Pack Opening Simulator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2C3E50; /* Dunkelblau als Hintergrundfarbe */
+            color: #fff;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #password-container {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2); /* Glasiger Effekt */
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px); /* Hinzufügen eines Blur-Effekts */
+        }
+
+        #password-input {
+            width: 200px;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            margin-right: 10px;
+            background: transparent;
+            color: #fff;
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        #submit-button {
+            cursor: pointer;
+            background: #3498DB; /* Blau für den Submit-Button */
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            transition: background 0.3s;
+        }
+
+        #submit-button:hover, #password-input:hover {
+            background: #555;
+        }
+
+        #password-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        #password-form {
+            transition: opacity 1s ease-in-out;
+            opacity: 1;
+        }
+
+        #password-form.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #pack {
+            width: 200px;
+            height: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        #card {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        #buy-button {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #buy-button:hover {
+            background-color: #45a049;
+        }
+
+        #sell-button {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #sell-button:hover {
+            background-color: #d32f2f;
+        }
+
+        #balance {
+            margin-top: 20px;
+            color: #000; /* Schwarzer Text für bessere Sichtbarkeit */
+        }
+    </style>
+</head>
+<body>
+
+<div id="password-form">
+    <div id="password-wrapper">
+        <div id="password-container">
+            <h2 style="font-weight: bold;">PASSWORT</h2>
+            <form onsubmit="checkPassword(); return false;">
+                <input type="password" id="password-input" placeholder="Passwort eingeben">
+                <button type="submit" id="submit-button">&#9654;</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="content" class="hidden">
+    <!-- Hier kommt der eigentliche Inhalt der Webseite -->
+    <h1>FIFA Pack Opening Simulator</h1>
+
+    <div id="pack">
+        <img id="card" src="placeholder_card.png" alt="Card">
+    </div>
+
+    <button id="buy-button" onclick="buyCard()">Buy Pack</button>
+    <button id="sell-button" onclick="sellCard()">Sell Card</button>
+
+    <div id="balance">Balance: <span id="money">1000</span> Coins</div>
+</div>
+
+<script>
+    let money = 1000;
+    let currentCard;
+
+    function buyCard() {
+        // Simulate buying a pack
+        const pack = document.getElementById('pack');
+        const card = document.getElementById('card');
+
+        currentCard = getRandomCard();
+
+        card.src = currentCard.image;
+
+        // Deduct money
+        money -= 100; // Placeholder cost
+        updateBalance();
+    }
+
+    function sellCard() {
+        // Ensure there is a card to sell
+        if (!currentCard) {
+            alert('No card to sell!');
+            return;
+        }
+
+        // Ensure money does not go into negative
+        if (money + currentCard.value < 0) {
+            alert('Cannot sell the card. Insufficient funds.');
+            return;
+        }
+
+        // Simulate selling a card
+        money += currentCard.value;
+        updateBalance();
+
+        // Reset card
+        document.getElementById('card').src = 'placeholder_card.png';
+        currentCard = null; // Reset currentCard after selling
+    }
+
+    function updateBalance() {
+        document.getElementById('money').innerText = money;
+    }
+
+    function getRandomCard() {
+        // Placeholder logic to get a random card
+        const cardList = [
+            { name: 'Player 1', image: 'player1.png', value: 50 },
+            { name: 'Player 2', image: 'player2.png', value: 75 },
+            { name: 'Player 3', image: 'player3.png', value: 100 },
+            // Add more cards
+        ];
+
+        const randomIndex = Math.floor(Math.random() * cardList.length);
+        return cardList[randomIndex];
+    }
+
+    function checkPassword() {
+        var password = document.getElementById('password-input').value;
+        if (password === 'bachad') {
+            document.getElementById('password-form').classList.add('hidden');
+            document.getElementById('content').classList.remove('hidden');
+        } else {
+            alert('Falsches Passwort. Bitte versuche es erneut.');
+        }
+    }
+
+    // Direkt nach Laden der Seite die Passwortprüfung ausführen
+    window.onload = function () {
+        checkPassword();
+    }
+</script>
+
+</body>
+</html>
